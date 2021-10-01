@@ -27,10 +27,8 @@ night_mode_ip2="" #夜间上网 伪造IP地址
 
 #可以不配置，使用默认配置
 interface_card_num1="wan"	#需要重启的网络接口
-pingcount=2 			#每次进行网络连通性测试多少次，次数多稳定耗时长，反而反之
+pingcount=3 			#每次进行网络连通性测试多少次，次数多稳定耗时长，反而反之
 pingip1="202.108.22.5" 		#测试网络连通性的ip1 BAIDU
-pingip2="114.114.114.114" 	#测试网络连通性的ip2 114
-pingip3="223.5.5.5" 		#测试网络连通性的ip3 Ali
 shutethdur=2 			#关闭网口后暂停时间 单位S
 afterethdur=10 			#重启网口后暂停时间，避免晚间无法启用midnight模式 单位S
 LogMax=32			#最大log容量，超过时会进行清空 当前为32KB
@@ -74,7 +72,7 @@ fi
 #仍然ping根据时间段则尝试重连
 if [ $netok -eq $okflag ];then
 	echo "Start second time ping"
-	PING=`ping -c $pingcount $pingip2|grep -v grep|grep '64 bytes' |wc -l`
+	PING=`ping -c $pingcount $pingip1|grep -v grep|grep '64 bytes' |wc -l`
 	if [ ${PING} -ne 0 ];then                                                                      
 		echo "Reping succeed!"
 		netok=1                                                                                 
@@ -111,7 +109,7 @@ fi
 #经过第一次重连后，测试网络连通性，若仍然不通，根据时间段再次尝试重连
 if [ $netok -eq $okflag ];then
 	echo "Start third time ping"
-	PING=`ping -c $pingcount $pingip3|grep -v grep|grep '64 bytes' |wc -l`
+	PING=`ping -c $pingcount $pingip1|grep -v grep|grep '64 bytes' |wc -l`
 	if [ ${PING} -ne 0 ];then                                                                      
         	echo "Reconnect succeed!"                                                          
       		netok=1                                                                                 
@@ -149,7 +147,7 @@ fi
 #最后测试下有没有连上，
 if [ $netok -eq $okflag ];then
 	echo "Start last time try ping"
-	PING=`ping -c $pingcount $pingip3|grep -v grep|grep '64 bytes' |wc -l`
+	PING=`ping -c $pingcount $pingip1|grep -v grep|grep '64 bytes' |wc -l`
 	if [ ${PING} -ne 0 ];then                                                                      
         	echo "Reconnect succeed!"                                                          
       		netok=1                                                                                 
